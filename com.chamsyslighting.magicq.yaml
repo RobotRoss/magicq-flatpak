@@ -1,0 +1,64 @@
+####
+# Flatpak Configuration for building DaVinci Resolve
+#
+####
+app-id: com.chamsyslighting.magicq
+runtime: org.freedesktop.Platform
+runtime-version: &runtime-version '23.08'
+sdk: org.freedesktop.Sdk
+finish-args:
+  - --share=ipc
+  - --share=network
+  - --socket=pulseaudio
+  - --socket=x11
+  - --socket=wayland
+  - --device=all
+  - --filesystem=xdg-documents
+  - --filesystem=xdg-cache
+  - --filesystem=xdg-data
+  - --filesystem=xdg-videos
+  - --env=LD_PRELOAD=/lib/x86_64-linux-gnu/libstdc++.so.6
+
+command: /app/opt/magicq/runmagicq.sh
+modules:
+  - shared-modules/glu/glu-9.json
+  - name: libdb
+    buildsystem: simple
+    subdir: build_unix
+    build-commands:
+      # Fix build on modern linux systems - https://www.linuxfromscratch.org/blfs/view/cvs/server/db.html
+      - sed -i 's/\(__atomic_compare_exchange\)/\1_db/' ../src/dbinc/atomic.h
+      - ../dist/configure --enable-dbm --disable-static
+      - make
+      - cp ./.libs/libdb-5.3.so /app/lib/libdb-5.3.so
+    sources:
+      - type: archive
+        url: https://github.com/berkeleydb/libdb/releases/download/v5.3.28/db-5.3.28.tar.gz
+        sha256: e0a992d740709892e81f9d93f06daf305cf73fb81b545afe72478043172c3628
+  - name: magicq
+    buildsystem: simple
+    build-commands:
+      - ar x magicq_ubuntu_v*.deb
+      - tar -xf data.tar.xz
+      - mv ./opt /app
+      - rm -rf magicq_ubuntu_v*.deb debian-binary control.tar.gz data.tar.xz
+      #MagicQ expects wrapper to run in it's directory, but never asks it to, so add that to the wrapper
+      - sed -i "1 acd \"\${0%/*\}\"" "/app/opt/magicq/runmagicq.sh"
+      - sed -i "1 acd \"\${0%/*\}\"" "/app/opt/magicq/runmagicvis.sh"
+      - sed -i "1 acd \"\${0%/*\}\"" "/app/opt/magicq/runmagichd.sh"
+      - install -Dm644 com.chamsyslighting.magicq.desktop /app/share/applications/${FLATPAK_ID}.desktop
+      - install -Dm644 ./usr/share/pixmaps/magicq.png /app/share/icons/hicolor/scalable/apps/${FLATPAK_ID}.png
+      - install -Dm644 com.chamsyslighting.magicq.magicvis.desktop /app/share/applications/${FLATPAK_ID}.magicvis.desktop
+      - install -Dm644 ./usr/share/pixmaps/magicvis.png /app/share/icons/hicolor/scalable/apps/${FLATPAK_ID}.magicvis.png
+      - install -Dm644 com.chamsyslighting.magicq.magichd.desktop /app/share/applications/${FLATPAK_ID}.magichd.desktop
+      - install -Dm644 ./usr/share/pixmaps/magichd.png /app/share/icons/hicolor/scalable/apps/${FLATPAK_ID}.magichd.png
+    sources:
+      - type: file
+        url: https://secure.chamsys.co.uk/downloads/v1_9_4_7/magicq_ubuntu_v1_9_4_7.deb
+        sha256: cd5e07e38f53ff45dbfd303d228af8bafa59755e5d61d7d81da68bdd0202e437
+      - type: file
+        path: com.chamsyslighting.magicq.desktop
+      - type: file
+        path: com.chamsyslighting.magicq.magicvis.desktop
+      - type: file
+        path: com.chamsyslighting.magicq.magichd.desktop

@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Name=ChamSys MagicQ
+GenericName=MagicQ
+Comment=DMX Lighting Control Software
+Exec=/app/opt/magicq/runmagicq.sh
+#Exec=/usr/bin/flatpak run --cwd=/app/opt/magicq com.chamsyslighting.magicq
+#Path=/opt/magicq
+Icon=com.chamsyslighting.magicq
+Categories=AudioVideo
+MimeType=application/x-magicq-show;application/x-magicq-backup
+Actions=Multiwin;
+
+[Desktop Action Multiwin]
+Exec=/app/opt/magicq/runmagicq.sh multiwin
+Name=Launch Multiwin mode

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=ChamSys MagicHD
+GenericName=MagicQ
+Comment=DMX Media Player
+Exec=/app/opt/magicq/runmagichd.sh
+#Path=/opt/magicq
+Icon=com.chamsyslighting.magicq.magichd
+Categories=AudioVideo

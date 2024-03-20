@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=ChamSys MagicVis
+GenericName=MagicQ
+Comment=DMX Lighting Visualiser
+Exec=/app/opt/magicq/runmagicvis.sh
+#Path=/opt/magicq
+Icon=com.chamsyslighting.magicq.magicvis
+Categories=AudioVideo
