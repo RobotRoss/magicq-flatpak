@@ -11,7 +11,7 @@ Usage
 -----
 
 1. Clone this repo with: `git clone https://github.com/RobotRoss/magicq-flatpak.git --recursive`
-By default, com.blackmagic.Resolve.yaml is configured to package the latest version of Resolve (18.5 Beta 3 at the time of writing).
+This will install MagicQ version v1.9.4.7.
 
 2. Build your package, and export to a distributable single file installer:
 
